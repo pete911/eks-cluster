@@ -37,7 +37,7 @@ resource "aws_subnet" "private" {
     type = local.type_tag
 
     "kubernetes.io/role/internal-elb"           = "1"
-    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
   }
 }
 
@@ -53,7 +53,7 @@ resource "aws_subnet" "public" {
     type = local.type_tag
 
     "kubernetes.io/role/elb"                    = "1"
-    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
   }
 }
 

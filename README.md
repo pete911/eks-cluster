@@ -35,9 +35,14 @@ private subnets for internet traffic.
 
 ## AWS EKS cluster
 
-Cluster name defaults to `main` (can be changed with `cluster_name` variable). Cluster has a public endpoint fully
-opened (`0.0.0.0/0`) by default, it is strongly encouraged to change this to list of allowed CIDRs using
+Cluster name defaults to `main` (can be changed with `cluster_name` variable). Cluster has a public endpoint open to all 
+traffic (`0.0.0.0/0`) by default, it is strongly encouraged to change this to list of allowed CIDRs using
 `public_access_cidrs` variable: `terraform apply -var='public_access_cidrs=["<your-IP>/32"]'`
 
 We prefix AWS IAM role for a cluster with region (so it doesn't clash if you have a cluster with the same name in
 multiple regions). IAM role name is in `<region>-eks-<cluster>` format.
+
+### Node groups
+
+By default, we create one `default` node group with `t2.small` instances. Update [tf/variables.tf](tf/variables.tf) file
+to change defaults.

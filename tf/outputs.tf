@@ -1,9 +1,4 @@
-output "cluster_endpoint" {
-  description = "AWS EKS cluster API endpoint"
-  value       = module.eks.cluster_endpoint
-}
-
-output "cluster_certificate" {
-  description = "AWS EKS cluster endpoint certificate"
-  value       = module.eks.cluster_certificate
+output "kubeconfig" {
+  description = "AWS EKS cluster kubeconfig file"
+  value       = module.eks.kubeconfig
 }
