@@ -26,4 +26,7 @@ private subnets for internet traffic.
 | eks-\<cluster>-public-b   | public  | b  | 10.0.0.208/28 | 14    | 10.0.0.208     | 10.0.0.223    | 10.0.0.209    | 10.0.0.222    |
 | eks-\<cluster>-public-c   | public  | c  | 10.0.0.224/28 | 14    | 10.0.0.224     | 10.0.0.239    | 10.0.0.225    | 10.0.0.238    |
 
-[eks-cluster](docs/images/eks-cluster.png)
+
+<p align="center">
+  <img src="docs/images/eks-cluster.png">
+</p>
