@@ -9,7 +9,13 @@ Terraform is in [tf](tf) directory (`cd tf`):
 ## vpc
 
 VPC name is `eks-<cluster>` (`<cluster>` defaults to `main` and can be changed with `cluster_name` variable). Default
-VPC address is `10.0.0.0` (can be changed with `vpc_address` variable) and VPC netmask is `/24`. Subnets are as follows:
+VPC address is `10.0.0.0` (can be changed with `vpc_address` variable) and VPC netmask is `/24`.
+
+### subnets
+
+We create 3 public and 3 private subnets in different availability zones. Each public subnet has
+[NAT Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) with elastic IP to be used by
+private subnets for internet traffic.
 
 | Name                      | Type    | AZ | CIDR          | Hosts | Address        | Broadcast     | Host Min      | Host Max      |
 | ------------------------- | ------- | -- | ------------- | ----- | -------------- | ------------- | ------------- | ------------- |
