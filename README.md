@@ -1,5 +1,9 @@
 # Terraform for EKS cluster
 
+Instead of using [terraform-aws-eks module](https://github.com/terraform-aws-modules/terraform-aws-eks), project uses
+only terraform aws provider resources to avoid complexity and increase readability. Also, to make it easy to make
+updates and changes.
+
 Terraform is in [tf](tf) directory (`cd tf`):
  - initialize and validate
    - `terraform init`
