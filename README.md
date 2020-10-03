@@ -1,12 +1,14 @@
 # Terraform for EKS cluster
 
 Terraform is in [tf](tf) directory (`cd tf`):
- - `terraform init`
- - `terraform validate`
- - `terraform plan`
- - `terraform apply`
+ - initialize and validate
+   - `terraform init`
+   - `terraform validate`
+   - `terraform plan`
+ - apply `terraform apply`
+ - destroy `tf destroy`
 
-## vpc
+## AWS VPC
 
 VPC name is `eks-<cluster>` (`<cluster>` defaults to `main` and can be changed with `cluster_name` variable). Default
 VPC address is `10.0.0.0` (can be changed with `vpc_address` variable) and VPC netmask is `/24`.
@@ -30,3 +32,12 @@ private subnets for internet traffic.
 <p align="center">
   <img src="docs/images/eks-cluster.png">
 </p>
+
+## AWS EKS cluster
+
+Cluster name defaults to `main` (can be changed with `cluster_name` variable). Cluster has a public endpoint fully
+opened (`0.0.0.0/0`) by default, it is strongly encouraged to change this to list of allowed CIDRs using
+`public_access_cidrs` variable: `terraform apply -var='public_access_cidrs=["<your-IP>/32"]'`
+
+We prefix AWS IAM role for a cluster with region (so it doesn't clash if you have a cluster with the same name in
+multiple regions). IAM role name is in `<region>-eks-<cluster>` format.

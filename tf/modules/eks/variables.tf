@@ -1,20 +1,19 @@
 variable "cluster_name" {
+  type        = string
   description = "AWS EKS cluster name"
-  default     = "main"
 }
 
 variable "public_access_cidrs" {
   type        = list(string)
   description = "CIDR blocks can access the Amazon EKS public API server endpoint"
-  default     = ["0.0.0.0/0"]
 }
 
 variable "region" {
+  type        = string
   description = "AWS Region to use"
-  default     = "eu-west-2"
 }
 
-variable "vpc_address" {
-  description = "AWS VPC address for EKS cluster (CIDR block without netmask)"
-  default     = "10.0.0.0"
+variable "subnet_ids" {
+  type        = list(string)
+  description = "AWS subnets for kubernets worker nodes"
 }

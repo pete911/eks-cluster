@@ -9,3 +9,12 @@ module "vpc" {
   region       = var.region
   vpc_address  = var.vpc_address
 }
+
+module "eks" {
+  source = "./modules/eks"
+
+  cluster_name        = var.cluster_name
+  public_access_cidrs = var.public_access_cidrs
+  region              = var.region
+  subnet_ids          = module.vpc.private_subnet_ids
+}

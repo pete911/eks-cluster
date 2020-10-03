@@ -1,4 +1,4 @@
-output "this_vpc_id" {
-  description = "The ID of the VPC"
-  value       = aws_vpc.this.id
+output "private_subnet_ids" {
+  description = "The IDs of private subnets"
+  value       = [for s in aws_subnet.private : s.id]
 }
