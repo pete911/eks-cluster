@@ -15,7 +15,6 @@ resource "aws_eks_cluster" "this" {
   name     = var.cluster_name
   role_arn = aws_iam_role.cluster.arn
 
-  // TODO - fix public access cidr (when specific IP is used, workers cannot connect)
   vpc_config {
     endpoint_public_access  = true
     endpoint_private_access = true
@@ -44,17 +43,13 @@ resource "aws_eks_node_group" "this" {
     min_size     = each.value.min_size
   }
 
-  instance_types = [each.value.instance_type]
-
-  // TODO - add launch template (new release should be soon)
-
   tags = {
-    Name = local.name
+    Name = format("%s-%s", local.name, each.key)
     type = local.type_tag
   }
 
   lifecycle {
-    ignore_changes = [scaling_config[0]["desired_size"]]
+    ignore_changes = [scaling_config["desired_size"]]
   }
 
   depends_on = [

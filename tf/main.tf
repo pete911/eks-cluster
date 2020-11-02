@@ -15,7 +15,7 @@ module "eks" {
 
   cluster_name        = var.cluster_name
   node_groups         = var.node_groups
-  public_access_cidrs = var.public_access_cidrs
+  public_access_cidrs = concat(var.public_access_cidrs, module.vpc.nat_gateway_cidrs)
   region              = var.region
   subnet_ids          = module.vpc.private_subnet_ids
 }
