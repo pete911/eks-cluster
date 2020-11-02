@@ -63,7 +63,7 @@ resource "aws_eks_node_group" "this" {
 # https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html
 
 resource "aws_iam_role" "cluster" {
-  name_prefix           = format("%s-%s", var.region, local.name)
+  name                  = format("%s-%s-cluster", local.name, var.region)
   force_detach_policies = true
   assume_role_policy    = <<POLICY
 {
@@ -95,7 +95,7 @@ resource "aws_iam_role_policy_attachment" "cluster" {
 # https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html
 
 resource "aws_iam_role" "node" {
-  name_prefix = format("%s-%s-node", var.region, local.name)
+  name = format("%s-%s-node", local.name, var.region)
 
   assume_role_policy = jsonencode({
     Statement = [{
