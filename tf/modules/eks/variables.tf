@@ -11,12 +11,12 @@ variable "node_groups" {
     max_size : number
     min_size : number
   }))
-  description = "AWS EKS node groups, where key is the node group name. Launch template version is the version to use for node group."
+  description = "AWS EKS node groups, where key is the node group name. Launch template version is the version to use for node group"
 }
 
 variable "public_access_cidrs" {
   type        = list(string)
-  description = "CIDR blocks can access the Amazon EKS public API server endpoint"
+  description = "CIDR blocks that can access the Amazon EKS public API server endpoint"
 }
 
 variable "region" {
@@ -27,4 +27,12 @@ variable "region" {
 variable "subnet_ids" {
   type        = list(string)
   description = "AWS subnets for kubernets worker nodes"
+}
+
+variable "ssh_access" {
+  type = map(object({
+    public_key : string
+    allowed_cidrs : list(string)
+  }))
+  description = "SSH keys for EKS worker nodes, where key is the name"
 }
