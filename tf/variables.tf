@@ -15,7 +15,7 @@ variable "node_groups" {
     "default" = {
       instance_type : "t2.small"
       desired_size : 1
-      max_size : 1
+      max_size : 3
       min_size : 1
     }
   }

@@ -33,8 +33,9 @@ resource "aws_subnet" "private" {
   availability_zone = format("%s%s", var.region, each.key)
 
   tags = {
-    Name = format("%s-private-%s", local.vpc_name, each.key)
-    type = local.type_tag
+    Name    = format("%s-private-%s", local.vpc_name, each.key)
+    type    = local.type_tag
+    private = "true"
 
     "kubernetes.io/role/internal-elb"           = "1"
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
@@ -49,8 +50,9 @@ resource "aws_subnet" "public" {
   availability_zone = format("%s%s", var.region, each.key)
 
   tags = {
-    Name = format("%s-public-%s", local.vpc_name, each.key)
-    type = local.type_tag
+    Name   = format("%s-public-%s", local.vpc_name, each.key)
+    type   = local.type_tag
+    public = "true"
 
     "kubernetes.io/role/elb"                    = "1"
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
@@ -77,8 +79,9 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = format("%s-public", local.vpc_name)
-    type = local.type_tag
+    Name   = format("%s-public", local.vpc_name)
+    type   = local.type_tag
+    public = "true"
   }
 }
 
@@ -127,8 +130,9 @@ resource "aws_route_table" "private" {
   }
 
   tags = {
-    Name = format("%s-private-%s", local.vpc_name, each.key)
-    type = local.type_tag
+    Name    = format("%s-private-%s", local.vpc_name, each.key)
+    type    = local.type_tag
+    private = "true"
   }
 }
 
