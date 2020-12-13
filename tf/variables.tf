@@ -5,6 +5,7 @@ variable "cluster_name" {
 
 variable "node_groups" {
   type = map(object({
+    launch_template_version : string
     instance_type : string
     desired_size : number
     max_size : number
@@ -13,6 +14,7 @@ variable "node_groups" {
   description = "AWS EKS node groups, where key is the node group name"
   default = {
     "default" = {
+      launch_template_version : 1
       instance_type : "t2.small"
       desired_size : 1
       max_size : 3

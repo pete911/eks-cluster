@@ -5,12 +5,13 @@ variable "cluster_name" {
 
 variable "node_groups" {
   type = map(object({
+    launch_template_version : string
     instance_type : string
     desired_size : number
     max_size : number
     min_size : number
   }))
-  description = "AWS EKS nod groups, where key is the node group name"
+  description = "AWS EKS node groups, where key is the node group name. Launch template version is the version to use for node group."
 }
 
 variable "public_access_cidrs" {

@@ -49,4 +49,6 @@ multiple regions). IAM role name is in `<region>-eks-<cluster>` format.
 ### Node groups
 
 By default, we create one `default` node group with `t2.small` instances. Update [tf/variables.tf](tf/variables.tf) file
-to change defaults.
+to change defaults. Node groups use launch template, so we have managed EKS nodes, but with custom images. To update
+image, but let AWS roll the nodes, update launch template (e.g change instance type) and then set node groups launch
+template version to the one you want to use.

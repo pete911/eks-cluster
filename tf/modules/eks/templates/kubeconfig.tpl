@@ -5,7 +5,7 @@ kind: Config
 clusters:
 - cluster:
     server: ${endpoint}
-    certificate-authority-data: ${cluster_auth_base64}
+    certificate-authority-data: ${cluster_ca_base64}
   name: ${kubeconfig_name}
 
 contexts:
