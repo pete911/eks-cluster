@@ -5,9 +5,10 @@ provider "aws" {
 module "vpc" {
   source = "./modules/vpc"
 
-  cluster_name = var.cluster_name
-  region       = var.region
-  vpc_address  = var.vpc_address
+  cluster_name        = var.cluster_name
+  region              = var.region
+  vpc_address         = var.vpc_address
+  firewall_allow_list = toset(compact(split("\n", file(format("%s/allow-list", path.module)))))
 }
 
 module "eks" {
@@ -18,4 +19,5 @@ module "eks" {
   public_access_cidrs = concat(var.public_access_cidrs, module.vpc.nat_gateway_cidrs)
   region              = var.region
   subnet_ids          = module.vpc.private_subnet_ids
+  ssh_access          = {}
 }

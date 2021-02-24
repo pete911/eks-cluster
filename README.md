@@ -19,22 +19,25 @@ VPC address is `10.0.0.0` (can be changed with `vpc_address` variable) and VPC n
 
 ### subnets
 
-We create 3 public and 3 private subnets in different availability zones. Each public subnet has
-[NAT Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) with elastic IP to be used by
-private subnets for internet traffic.
+| Name                        | AZ  | CIDR            | From         | To           |
+| --------------------------- | --- | --------------- | ------------ | ------------ |
+| eks-\<cluster>-private-a    | a   | 10.0.0.0/26     | 10.0.0.0     | 10.0.0.63    |
+| eks-\<cluster>-private-b    | b   | 10.0.0.64/26    | 10.0.0.64    | 10.0.0.127   |
+| eks-\<cluster>-private-c    | c   | 10.0.0.128/26   | 10.0.0.128   | 10.0.0.191   |
+| --------------------------- | --- | --------------- | ------------ | ------------ |
+| eks-\<cluster>-protected-a  | a   | 10.0.0.192/29   | 10.0.0.192   | 10.0.0.199   |
+| eks-\<cluster>-protected-b  | b   | 10.0.0.200/29   | 10.0.0.200   | 10.0.0.207   |
+| eks-\<cluster>-protected-c  | c   | 10.0.0.208/29   | 10.0.0.208   | 10.0.0.215   |
+| --------------------------- | --- | --------------- | ------------ | ------------ |
+| eks-\<cluster>-firewall-a   | a   | 10.0.0.216/29   | 10.0.0.216   | 10.0.0.223   |
+| eks-\<cluster>-firewall-b   | b   | 10.0.0.224/29   | 10.0.0.224   | 10.0.0.231   |
+| eks-\<cluster>-firewall-c   | c   | 10.0.0.232/29   | 10.0.0.232   | 10.0.0.239   |
 
-| Name                      | Type    | AZ | CIDR          | Hosts | Address        | Broadcast     | Host Min      | Host Max      |
-| ------------------------- | ------- | -- | ------------- | ----- | -------------- | ------------- | ------------- | ------------- |
-| eks-\<cluster>-private-a  | private | a  | 10.0.0.0/26   | 62    | 10.0.0.0       | 10.0.0.63     | 10.0.0.1      | 10.0.0.62     |
-| eks-\<cluster>-private-b  | private | b  | 10.0.0.64/26  | 62    | 10.0.0.64      | 10.0.0.127    | 10.0.0.65     | 10.0.0.126    |
-| eks-\<cluster>-private-c  | private | c  | 10.0.0.128/26 | 62    | 10.0.0.128     | 10.0.0.191    | 10.0.0.129    | 10.0.0.190    |
-| eks-\<cluster>-public-a   | public  | a  | 10.0.0.192/28 | 14    | 10.0.0.192     | 10.0.0.207    | 10.0.0.193    | 10.0.0.206    |
-| eks-\<cluster>-public-b   | public  | b  | 10.0.0.208/28 | 14    | 10.0.0.208     | 10.0.0.223    | 10.0.0.209    | 10.0.0.222    |
-| eks-\<cluster>-public-c   | public  | c  | 10.0.0.224/28 | 14    | 10.0.0.224     | 10.0.0.239    | 10.0.0.225    | 10.0.0.238    |
-
+Cluster uses [aws network firewall](https://aws.amazon.com/blogs/networking-and-content-delivery/deployment-models-for-aws-network-firewall/)
+deployed to `firewall` subnets. In addition, we create 3 private and 3 protected subnets for the cluster. 
 
 <p align="center">
-  <img src="docs/images/eks-cluster.png">
+  <img src="https://d2908q01vomqb2.cloudfront.net/5b384ce32d8cdef02bc3a139d4cac0a22bb029e8/2020/11/18/anfw-public-igw-deployment-high-res1-1-1.png">
 </p>
 
 ## AWS EKS cluster

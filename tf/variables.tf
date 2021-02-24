@@ -31,7 +31,7 @@ variable "public_access_cidrs" {
 
 variable "region" {
   description = "AWS Region to use"
-  default     = "eu-west-2"
+  default     = "eu-west-1"
 }
 
 variable "vpc_address" {

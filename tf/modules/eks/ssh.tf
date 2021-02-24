@@ -10,6 +10,8 @@ resource "aws_key_pair" "cluster" {
   }
 }
 resource "aws_security_group" "cluster_ssh" {
+  count = length(var.ssh_access) == 0 ? 0 : 1
+
   name        = format("%s-SSH", local.name)
   description = "Allow EKS cluster SSH access"
 
@@ -27,6 +29,6 @@ resource "aws_security_group_rule" "cluster_ssh" {
   to_port           = 22
   protocol          = "tcp"
   cidr_blocks       = [each.value.allowed_cidrs]
-  security_group_id = aws_security_group.cluster_ssh.id
+  security_group_id = aws_security_group.cluster_ssh[0].id
   description       = format("SSH access %s", each.key)
 }

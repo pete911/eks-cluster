@@ -57,7 +57,7 @@ resource "aws_launch_template" "cluster" {
   name                   = each.key
   default_version        = each.value.launch_template_version
   instance_type          = each.value.instance_type
-  vpc_security_group_ids = [aws_eks_cluster.this.vpc_config[0].cluster_security_group_id, aws_security_group.cluster_ssh.id]
+  vpc_security_group_ids = local.vpc_security_group_ids
   image_id               = data.aws_ami.eks_node.image_id
 
   block_device_mappings {
