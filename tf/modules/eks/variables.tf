@@ -3,6 +3,12 @@ variable "cluster_name" {
   description = "AWS EKS cluster name"
 }
 
+variable "eks_version" {
+  type        = string
+  description = "AWS EKS Kubernetes version"
+  default     = "1.23"
+}
+
 variable "node_groups" {
   type = map(object({
     launch_template_version : string
@@ -24,15 +30,12 @@ variable "region" {
   description = "AWS Region to use"
 }
 
-variable "subnet_ids" {
-  type        = list(string)
-  description = "AWS subnets for kubernets worker nodes"
+variable "vpc_id" {
+  type        = string
+  description = "AWS vpc for kubernetes worker nodes"
 }
 
-variable "ssh_access" {
-  type = map(object({
-    public_key : string
-    allowed_cidrs : list(string)
-  }))
-  description = "SSH keys for EKS worker nodes, where key is the name"
+variable "subnet_ids" {
+  type        = list(string)
+  description = "AWS subnets for kubernetes worker nodes"
 }

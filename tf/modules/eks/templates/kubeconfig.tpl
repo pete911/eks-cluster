@@ -20,7 +20,7 @@ users:
 - name: ${kubeconfig_name}
   user:
     exec:
-      apiVersion: client.authentication.k8s.io/v1alpha1
+      apiVersion: client.authentication.k8s.io/v1beta1
       command: aws
       args:
       - --region
@@ -29,4 +29,3 @@ users:
       - get-token
       - --cluster-name
       - ${cluster_name}
-      env: null

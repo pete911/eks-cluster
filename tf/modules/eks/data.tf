@@ -1,8 +1,9 @@
 data "aws_ami" "eks_node" {
-  owners = ["amazon"]
+  owners      = ["amazon"]
+  most_recent = true
 
   filter {
     name   = "name"
-    values = ["amazon-eks-node-1.18-v20201126"]
+    values = [format("amazon-eks-node-%s-*", var.eks_version)]
   }
 }

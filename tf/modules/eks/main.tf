@@ -1,5 +1,6 @@
 resource "aws_eks_cluster" "this" {
   name     = var.cluster_name
+  version  = "1.23"
   role_arn = aws_iam_role.cluster.arn
 
   vpc_config {
@@ -57,7 +58,7 @@ resource "aws_launch_template" "cluster" {
   name                   = each.key
   default_version        = each.value.launch_template_version
   instance_type          = each.value.instance_type
-  vpc_security_group_ids = [aws_eks_cluster.this.vpc_config[0].cluster_security_group_id, aws_security_group.cluster_ssh.id]
+  vpc_security_group_ids = [aws_eks_cluster.this.vpc_config[0].cluster_security_group_id]
   image_id               = data.aws_ami.eks_node.image_id
 
   block_device_mappings {
@@ -70,7 +71,9 @@ resource "aws_launch_template" "cluster" {
   }
 
   user_data = base64encode(templatefile(format("%s/templates/user_data.tpl", path.module), {
-    cluster_name = var.cluster_name
+    cluster_name      = var.cluster_name
+    endpoint          = aws_eks_cluster.this.endpoint
+    cluster_ca_base64 = aws_eks_cluster.this.certificate_authority[0].data
   }))
 
   tag_specifications {

@@ -11,11 +11,11 @@ variable "node_groups" {
     max_size : number
     min_size : number
   }))
-  description = "AWS EKS node groups, where key is the node group name"
+  description = "AWS EKS node groups, where key is the node group name. Launch template version is the version to use for node group"
   default = {
     "default" = {
       launch_template_version : 1
-      instance_type : "t2.small"
+      instance_type : "t3.medium"
       desired_size : 1
       max_size : 3
       min_size : 1
