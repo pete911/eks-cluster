@@ -9,7 +9,7 @@ Terraform is in [tf](tf) directory (`cd tf`):
    - `terraform init`
    - `terraform validate`
    - `terraform plan`
- - apply (replace `<your-IP>`) `terraform apply -var='public_access_cidrs=["<your-IP>/32"]`
+ - apply (replace `<your-IP>`) `terraform apply -var='public_access_cidrs=["<your-IP>/32"]'`
  - destroy `tf destroy`
 
 ## AWS VPC
