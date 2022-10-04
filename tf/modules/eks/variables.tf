@@ -39,3 +39,9 @@ variable "subnet_ids" {
   type        = list(string)
   description = "AWS subnets for kubernetes worker nodes"
 }
+
+variable "system_master_roles" {
+  type        = list(string)
+  description = "role names for kubernetes system:master groups"
+  default     = ["admin"]
+}

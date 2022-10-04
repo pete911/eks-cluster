@@ -4,6 +4,9 @@ Instead of using [terraform-aws-eks module](https://github.com/terraform-aws-mod
 only terraform aws provider resources to avoid complexity and increase readability. Also, to make it easy to make
 updates and changes.
 
+This branch provides an example of self-managed nodes (not node groups). To see an example of managed node groups,
+switch to main branch.
+
 Terraform is in [tf](tf) directory (`cd tf`):
  - initialize and validate
    - `terraform init`
@@ -49,6 +52,5 @@ multiple regions). IAM role name is in `<region>-eks-<cluster>` format.
 ### Node groups
 
 By default, we create one `default` node group with `t3.medium` instances. Update [tf/variables.tf](tf/variables.tf) file
-to change defaults. Node groups use launch template, so we have managed EKS nodes, but with custom images. To update
-image, but let AWS roll the nodes, update launch template (e.g. change instance type) and then set node groups launch
-template version to the one you want to use.
+to change defaults. Nodes use launch template. Update launch template (e.g. change instance type) and then start instance
+refresh on autoscaling group to refresh all the nodes.

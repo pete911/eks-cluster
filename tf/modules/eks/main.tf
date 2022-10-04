@@ -17,41 +17,6 @@ resource "aws_eks_cluster" "this" {
   depends_on = [aws_iam_role_policy_attachment.cluster]
 }
 
-resource "aws_eks_node_group" "this" {
-  for_each = var.node_groups
-
-  cluster_name    = aws_eks_cluster.this.name
-  node_group_name = each.key
-  node_role_arn   = aws_iam_role.node.arn
-  subnet_ids      = var.subnet_ids
-
-  scaling_config {
-    desired_size = each.value.desired_size
-    max_size     = each.value.max_size
-    min_size     = each.value.min_size
-  }
-
-  launch_template {
-    id      = aws_launch_template.cluster[each.key].id
-    version = aws_launch_template.cluster[each.key].default_version
-  }
-
-  tags = {
-    Name = format("%s-%s", local.name, each.key)
-    type = local.type_tag
-  }
-
-  lifecycle {
-    ignore_changes = [scaling_config["desired_size"]]
-  }
-
-  depends_on = [
-    aws_iam_role_policy_attachment.AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly,
-  ]
-}
-
 resource "aws_launch_template" "cluster" {
   for_each = var.node_groups
 
@@ -70,6 +35,10 @@ resource "aws_launch_template" "cluster" {
     }
   }
 
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.node.arn
+  }
+
   user_data = base64encode(templatefile(format("%s/templates/user_data.tpl", path.module), {
     cluster_name      = var.cluster_name
     endpoint          = aws_eks_cluster.this.endpoint
@@ -80,8 +49,57 @@ resource "aws_launch_template" "cluster" {
     resource_type = "instance"
 
     tags = {
+      Name                                                 = format("%s-%s", local.name, each.key)
+      type                                                 = local.type_tag
+      format("kubernetes.io/cluster/%s", var.cluster_name) = "owned"
+    }
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+
+    tags = {
       Name = format("%s-%s", local.name, each.key)
       type = local.type_tag
     }
+  }
+
+  depends_on = [
+    aws_iam_role_policy_attachment.AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly,
+  ]
+}
+
+resource "aws_autoscaling_group" "cluster" {
+  for_each = var.node_groups
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [suspended_processes, load_balancers, target_group_arns]
+  }
+
+  name             = format("%s-%s", local.name, each.key)
+  desired_capacity = each.value.desired_size
+  max_size         = each.value.max_size
+  min_size         = each.value.min_size
+
+  launch_template {
+    id      = aws_launch_template.cluster[each.key].id
+    version = "$Latest"
+  }
+
+  vpc_zone_identifier = var.subnet_ids
+
+  tag {
+    key                 = "Name"
+    value               = format("%s-%s", local.name, each.key)
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "type"
+    value               = local.type_tag
+    propagate_at_launch = true
   }
 }
