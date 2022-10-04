@@ -14,6 +14,7 @@ module "eks" {
   source = "./modules/eks"
 
   cluster_name        = var.cluster_name
+  eks_version         = var.eks_version
   node_groups         = var.node_groups
   public_access_cidrs = concat(var.public_access_cidrs, module.vpc.nat_gateway_cidrs)
   region              = var.region

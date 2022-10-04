@@ -2,21 +2,24 @@ locals {
   name     = format("eks-%s", var.cluster_name)
   type_tag = "eks-cluster"
 
-  auth_roles = [
+  node_roles = [
     {
-      rolearn = aws_iam_role.node.arn
+      rolearn  = aws_iam_role.node.arn
       username = "system:node:{{EC2PrivateDNSName}}"
-      groups = ["system:bootstrappers", "system:nodes"]
+      groups   = ["system:bootstrappers", "system:nodes"]
     }
   ]
 
-  auth_users = [
-    for role in var.system_master_roles : {
-      rolearn = format("arn:aws:iam::%s:role/%s", data.aws_caller_identity.current.account_id, role)
+  system_master_roles = [
+    for role_name in var.system_master_role_names : {
+      rolearn  = format("arn:aws:iam::%s:role/%s", data.aws_caller_identity.current.account_id, role_name)
       username = "{{SessionName}}"
-      groups = ["system:masters"]
+      groups   = ["system:masters"]
     }
   ]
+
+  auth_roles = concat(local.node_roles, local.system_master_roles)
+  auth_users = []
 
   kubeconfig = templatefile(format("%s/templates/kubeconfig.tpl", path.module), {
     kubeconfig_name   = format("%s.%s", var.region, var.cluster_name)

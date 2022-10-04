@@ -11,7 +11,6 @@ variable "eks_version" {
 
 variable "node_groups" {
   type = map(object({
-    launch_template_version : string
     instance_type : string
     desired_size : number
     max_size : number
@@ -40,7 +39,7 @@ variable "subnet_ids" {
   description = "AWS subnets for kubernetes worker nodes"
 }
 
-variable "system_master_roles" {
+variable "system_master_role_names" {
   type        = list(string)
   description = "role names for kubernetes system:master groups"
   default     = ["admin"]

@@ -1,6 +1,6 @@
 resource "aws_eks_cluster" "this" {
   name     = var.cluster_name
-  version  = "1.23"
+  version  = var.eks_version
   role_arn = aws_iam_role.cluster.arn
 
   vpc_config {
@@ -21,7 +21,6 @@ resource "aws_launch_template" "cluster" {
   for_each = var.node_groups
 
   name                   = each.key
-  default_version        = each.value.launch_template_version
   instance_type          = each.value.instance_type
   vpc_security_group_ids = [aws_eks_cluster.this.vpc_config[0].cluster_security_group_id]
   image_id               = data.aws_ami.eks_node.image_id

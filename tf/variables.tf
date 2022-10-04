@@ -3,9 +3,14 @@ variable "cluster_name" {
   default     = "main"
 }
 
+variable "eks_version" {
+  type        = string
+  description = "AWS EKS Kubernetes version"
+  default     = "1.23"
+}
+
 variable "node_groups" {
   type = map(object({
-    launch_template_version : string
     instance_type : string
     desired_size : number
     max_size : number
@@ -14,7 +19,6 @@ variable "node_groups" {
   description = "AWS EKS node groups, where key is the node group name. Launch template version is the version to use for node group"
   default = {
     "default" = {
-      launch_template_version : 1
       instance_type : "t3.medium"
       desired_size : 1
       max_size : 3
