@@ -3,6 +3,12 @@ variable "cluster_name" {
   default     = "main"
 }
 
+variable "eks_version" {
+  type        = string
+  description = "AWS EKS Kubernetes version"
+  default     = "1.23"
+}
+
 variable "node_groups" {
   type = map(object({
     launch_template_version : string
