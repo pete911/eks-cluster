@@ -1,11 +1,5 @@
 # Terraform for EKS cluster
 
-Instead of using [terraform-aws-eks module](https://github.com/terraform-aws-modules/terraform-aws-eks), project uses
-only terraform aws provider resources to avoid complexity and increase readability. Also, to make it easy to make
-updates and changes.
-
-To see an example of self-managed nodes, switch to `self-managed-nodes` branch.
-
 Terraform is in [tf](tf) directory (`cd tf`):
  - initialize and validate
    - `terraform init`
@@ -54,3 +48,8 @@ By default, we create one `default` node group with `t3.medium` instances. Updat
 to change defaults. Node groups use launch template, so we have managed EKS nodes, but with custom images. To update
 image, but let AWS roll the nodes, update launch template (e.g. change instance type) and then set node groups launch
 template version to the one you want to use.
+
+## ECR
+
+By default, project creates ECR repositories (<cluster>/debug) and private link to ECR and S3 (docker images content is
+stored in S3).

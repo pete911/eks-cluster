@@ -29,6 +29,12 @@ resource "aws_iam_role_policy_attachment" "cluster" {
   role       = aws_iam_role.cluster.name
 }
 
+resource "aws_iam_openid_connect_provider" "cluster" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.cluster.certificates[0].sha1_fingerprint]
+  url             = aws_eks_cluster.this.identity[0].oidc[0].issuer
+}
+
 # --- EKS Node IAM ---
 # https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html
 

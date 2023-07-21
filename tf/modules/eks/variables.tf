@@ -6,7 +6,6 @@ variable "cluster_name" {
 variable "eks_version" {
   type        = string
   description = "AWS EKS Kubernetes version"
-  default     = "1.23"
 }
 
 variable "node_groups" {
@@ -35,7 +34,15 @@ variable "vpc_id" {
   description = "AWS vpc for kubernetes worker nodes"
 }
 
-variable "subnet_ids" {
-  type        = list(string)
+variable "subnets" {
+  type = list(object({
+    id: string
+    route_table_id: string
+  }))
   description = "AWS subnets for kubernetes worker nodes"
+}
+
+variable "ecr_repositories" {
+  type        = set(string)
+  description = "AWS private ECR repositories"
 }

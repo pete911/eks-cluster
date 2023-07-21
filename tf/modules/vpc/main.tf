@@ -17,7 +17,9 @@ locals {
 # --- VPC plus private and public subnets in 3 AZs ---
 
 resource "aws_vpc" "this" {
-  cidr_block = local.vpc_cidr
+  cidr_block           = local.vpc_cidr
+  enable_dns_support   = true
+  enable_dns_hostnames = true
 
   tags = {
     Name = local.vpc_name
@@ -97,7 +99,7 @@ resource "aws_route_table_association" "public" {
 resource "aws_eip" "nat" {
   for_each = local.public_subnets
 
-  vpc = true
+  domain = "vpc"
 
   tags = {
     Name = format("%s-%s", local.vpc_name, each.key)

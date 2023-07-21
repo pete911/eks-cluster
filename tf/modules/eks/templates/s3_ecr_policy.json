@@ -1,0 +1,14 @@
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Principal": "*",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": ["arn:aws:s3:::prod-${region}-starport-layer-bucket/*"]
+    }
+  ]
+}

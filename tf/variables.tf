@@ -6,7 +6,7 @@ variable "cluster_name" {
 variable "eks_version" {
   type        = string
   description = "AWS EKS Kubernetes version"
-  default     = "1.23"
+  default     = "1.27"
 }
 
 variable "node_groups" {
@@ -22,9 +22,9 @@ variable "node_groups" {
     "default" = {
       launch_template_version : 1
       instance_type : "t3.medium"
-      desired_size : 1
-      max_size : 3
-      min_size : 1
+      desired_size : 3
+      max_size : 10
+      min_size : 3
     }
   }
 }
