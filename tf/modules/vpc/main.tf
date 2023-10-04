@@ -1,5 +1,5 @@
 locals {
-  vpc_cidr = format("%s/24", var.vpc_address)
+  vpc_cidr = format("%s/22", var.vpc_address)
   vpc_name = format("eks-%s", var.cluster_name)
   type_tag = "eks-cluster"
   private_subnets = {
@@ -41,6 +41,7 @@ resource "aws_subnet" "private" {
 
     "kubernetes.io/role/internal-elb"           = "1"
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "karpenter.sh/discovery"                    = var.cluster_name
   }
 }
 

@@ -7,7 +7,8 @@ resource "aws_flow_log" "this" {
 }
 
 resource "aws_cloudwatch_log_group" "flow_log" {
-  name = local.cloudwatch_log_group
+  name              = local.cloudwatch_log_group
+  retention_in_days = 60
 
   tags = {
     Name = format("eks-%s", var.cluster_name)
@@ -29,7 +30,7 @@ data "aws_iam_policy_document" "flow_log_assume_role" {
 }
 
 resource "aws_iam_role" "flow_log" {
-  name = format("%s-%s-flow-log-cloudwatch", var.cluster_name, var.region)
+  name               = format("%s-%s-flow-log-cloudwatch", var.cluster_name, var.region)
   assume_role_policy = data.aws_iam_policy_document.flow_log_assume_role.json
 
   inline_policy {

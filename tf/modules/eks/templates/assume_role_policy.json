@@ -1,0 +1,19 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "${openid_arn}"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "${openid_url}:aud": "sts.amazonaws.com",
+          "${openid_url}:sub": "system:serviceaccount:${namespace}:${service_account}"
+        }
+      }
+    }
+  ]
+}

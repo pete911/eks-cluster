@@ -1,0 +1,8 @@
+settings:
+  aws:
+    clusterName: ${cluster_name}
+    clusterEndpoints: ${cluster_endpoint}
+    defaultInstanceProfile: ${instance_profile}
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: ${role_arn}

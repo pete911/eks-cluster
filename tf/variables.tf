@@ -6,26 +6,24 @@ variable "cluster_name" {
 variable "eks_version" {
   type        = string
   description = "AWS EKS Kubernetes version"
-  default     = "1.27"
+  default     = "1.28"
 }
 
-variable "node_groups" {
-  type = map(object({
+variable "karpenter_node_group" {
+  type = object({
     launch_template_version : string
     instance_type : string
     desired_size : number
     max_size : number
     min_size : number
-  }))
-  description = "AWS EKS node groups, where key is the node group name. Launch template version is the version to use for node group"
+  })
+  description = "node group for karpenter controller and webhook"
   default = {
-    "default" = {
-      launch_template_version : 1
-      instance_type : "t3.medium"
-      desired_size : 3
-      max_size : 10
-      min_size : 3
-    }
+    launch_template_version : 1
+    instance_type : "t3.medium"
+    desired_size : 3
+    max_size : 10
+    min_size : 3
   }
 }
 

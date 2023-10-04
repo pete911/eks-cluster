@@ -8,15 +8,15 @@ variable "eks_version" {
   description = "AWS EKS Kubernetes version"
 }
 
-variable "node_groups" {
-  type = map(object({
+variable "karpenter_node_group" {
+  type = object({
     launch_template_version : string
     instance_type : string
     desired_size : number
     max_size : number
     min_size : number
-  }))
-  description = "AWS EKS node groups, where key is the node group name. Launch template version is the version to use for node group"
+  })
+  description = "node group for karpenter controller and webhook"
 }
 
 variable "public_access_cidrs" {
@@ -40,9 +40,4 @@ variable "subnets" {
     route_table_id: string
   }))
   description = "AWS subnets for kubernetes worker nodes"
-}
-
-variable "ecr_repositories" {
-  type        = set(string)
-  description = "AWS private ECR repositories"
 }
