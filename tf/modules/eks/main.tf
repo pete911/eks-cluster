@@ -63,7 +63,7 @@ resource "aws_security_group" "control_plane" {
   description = "eks cluster control plane"
 
   tags = {
-    Name                         = local.name
+    Name                         = format("%s-eks-control-plane", var.cluster_name)
     cluster                      = local.name
     "kubernetes.io/cluster/main" = "owned"
     type                         = local.type_tag

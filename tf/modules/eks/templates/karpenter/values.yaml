@@ -5,4 +5,4 @@ settings:
     defaultInstanceProfile: ${instance_profile}
 serviceAccount:
   annotations:
-    eks.amazonaws.com/role-arn: ${role_arn}
+    eks.amazonaws.com/role-arn: ${svc_acc_role_arn}

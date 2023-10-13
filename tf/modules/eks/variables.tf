@@ -8,7 +8,7 @@ variable "eks_version" {
   description = "AWS EKS Kubernetes version"
 }
 
-variable "karpenter_node_group" {
+variable "karpenter_controller_node_group" {
   type = object({
     launch_template_version : string
     instance_type : string

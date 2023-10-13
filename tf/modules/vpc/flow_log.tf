@@ -40,7 +40,6 @@ resource "aws_iam_role" "flow_log" {
       Statement = [
         {
           Action = [
-            "logs:CreateLogGroup",
             "logs:CreateLogStream",
             "logs:PutLogEvents",
             "logs:DescribeLogGroups",
@@ -58,7 +57,7 @@ resource "aws_cloudwatch_query_definition" "kubelet" {
   name            = "flow-log-reject"
   log_group_names = [local.cloudwatch_log_group]
   query_string    = <<EOF
-fields @timestamp, @message
+fields @timestamp, instanceId, interfaceId, srcAddr, srcPort, dstAddr, dstPort
 | filter (action="REJECT")
 | sort @timestamp desc
 | limit 50
