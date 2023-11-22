@@ -109,6 +109,11 @@ resource "aws_iam_role_policy_attachment" "karpenter_AmazonSSMManagedInstanceCor
   role       = aws_iam_role.karpenter_controller_node.name
 }
 
+resource "aws_iam_role_policy_attachment" "ebs_csi_AmazonEBSCSIDriverPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  role       = aws_iam_role.karpenter_controller_node.name
+}
+
 // karpenter namespace
 
 resource "kubernetes_namespace" "karpenter" {
@@ -126,6 +131,38 @@ resource "aws_iam_role" "karpenter_controller_svc_acc" {
     openid_url      = aws_iam_openid_connect_provider.cluster.url
     namespace       = local.karpenter_namespace
     service_account = "karpenter"
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ebs_csi_controler_AmazonEBSCSIDriverPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  role       = aws_iam_role.ebs_csi_controller_svc_acc.name
+}
+
+resource "helm_release" "karpenter" {
+  name       = "karpenter"
+  repository = "oci://public.ecr.aws/karpenter"
+  chart      = "karpenter"
+  version    = "v0.31.1"
+  namespace  = local.karpenter_namespace
+
+  values = [templatefile(format("%s/templates/karpenter/values.yaml", path.module), {
+    svc_acc_role_arn = aws_iam_role.karpenter_controller_svc_acc.arn
+    cluster_name     = aws_eks_cluster.this.name
+    cluster_endpoint = aws_eks_cluster.this.endpoint
+    instance_profile = aws_iam_instance_profile.karpenter_node.name
+  })]
+}
+
+// ebs csi controller role (used by ebs csi service account)
+
+resource "aws_iam_role" "ebs_csi_controller_svc_acc" {
+  name = format("%s-%s-ebs-csi-controller", local.name, var.region)
+  assume_role_policy = templatefile(format("%s/templates/assume_role_policy.json", path.module), {
+    openid_arn      = aws_iam_openid_connect_provider.cluster.arn
+    openid_url      = aws_iam_openid_connect_provider.cluster.url
+    namespace       = "kube-system"
+    service_account = "ebs-csi-controller-sa"
   })
 
   inline_policy {
@@ -174,17 +211,13 @@ resource "aws_iam_role" "karpenter_controller_svc_acc" {
   }
 }
 
-resource "helm_release" "karpenter" {
-  name       = "karpenter"
-  repository = "oci://public.ecr.aws/karpenter"
-  chart      = "karpenter"
-  version    = "v0.31.1"
-  namespace  = local.karpenter_namespace
+resource "helm_release" "ebs_csi" {
+  name       = "aws-ebs-csi-driver"
+  repository = "https://kubernetes-sigs.github.io/aws-ebs-csi-driver"
+  chart      = "aws-ebs-csi-driver"
+  version    = "2.24.1"
 
-  values = [templatefile(format("%s/templates/karpenter/values.yaml", path.module), {
-    svc_acc_role_arn = aws_iam_role.karpenter_controller_svc_acc.arn
-    cluster_name     = aws_eks_cluster.this.name
-    cluster_endpoint = aws_eks_cluster.this.endpoint
-    instance_profile = aws_iam_instance_profile.karpenter_node.name
+  values = [templatefile(format("%s/templates/ebs_csi/values.yaml", path.module), {
+    svc_acc_role_arn = aws_iam_role.ebs_csi_controller_svc_acc.arn
   })]
 }

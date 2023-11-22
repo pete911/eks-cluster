@@ -58,7 +58,7 @@ resource "aws_iam_role" "prometheus" {
     openid_arn      = aws_iam_openid_connect_provider.cluster.arn
     openid_url      = aws_iam_openid_connect_provider.cluster.url
     namespace       = local.prometheus_namespace
-    service_account = "prometheus"
+    service_account = "amp-iamproxy-ingest-service-account"
   })
 
   inline_policy {

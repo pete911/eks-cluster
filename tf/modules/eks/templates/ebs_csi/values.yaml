@@ -1,0 +1,4 @@
+controller:
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: ${svc_acc_role_arn}
