@@ -120,6 +120,30 @@ resource "aws_eks_node_group" "this" {
   ]
 }
 
+resource "aws_autoscaling_schedule" "scale_down" {
+  for_each = toset([for k, v in var.node_groups : k if v.ooo_shut_down])
+
+  autoscaling_group_name = aws_eks_node_group.this[each.value].resources[0].autoscaling_groups[0].name
+  scheduled_action_name  = "scale down (week)"
+
+  desired_capacity = 0
+  max_size         = 0
+  min_size         = 0
+  recurrence       = "0 22 * * MON-FRI"
+}
+
+resource "aws_autoscaling_schedule" "scale_up" {
+  for_each = toset([for k, v in var.node_groups : k if v.ooo_shut_down])
+
+  autoscaling_group_name = aws_eks_node_group.this[each.value].resources[0].autoscaling_groups[0].name
+  scheduled_action_name  = "scale up (week)"
+
+  desired_capacity = var.node_groups[each.value].desired_size
+  max_size         = var.node_groups[each.value].max_size
+  min_size         = var.node_groups[each.value].min_size
+  recurrence       = "0 6 * * MON-FRI"
+}
+
 resource "aws_launch_template" "cluster" {
   for_each = var.node_groups
 

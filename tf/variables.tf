@@ -16,6 +16,7 @@ variable "node_groups" {
     desired_size : number
     max_size : number
     min_size : number
+    ooo_shut_down : bool
   }))
   description = "AWS EKS node groups, where key is the node group name. Launch template version is the version to use for node group"
   default = {
@@ -25,6 +26,7 @@ variable "node_groups" {
       desired_size : 3
       max_size : 10
       min_size : 3
+      ooo_shut_down: true
     }
   }
 }

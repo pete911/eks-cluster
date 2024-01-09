@@ -15,6 +15,7 @@ variable "node_groups" {
     desired_size : number
     max_size : number
     min_size : number
+    ooo_shut_down : bool
   }))
   description = "AWS EKS node groups, where key is the node group name. Launch template version is the version to use for node group"
 }
@@ -36,8 +37,8 @@ variable "vpc_id" {
 
 variable "subnets" {
   type = list(object({
-    id: string
-    route_table_id: string
+    id : string
+    route_table_id : string
   }))
   description = "AWS subnets for kubernetes worker nodes"
 }
